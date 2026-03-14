@@ -25,9 +25,23 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+**Game purpose:** A number-guessing game where the player picks a difficulty, receives a secret number range, and tries to guess the number within a limited number of attempts. Hints guide the player higher or lower after each wrong guess.
+
+**Bugs found:**
+1. **Inverted hint messages** — `check_guess` paired "Too High" with "Go HIGHER!" and "Too Low" with "Go LOWER!" (both backwards).
+2. **Even-attempt string comparison** — On every even-numbered attempt `app.py` cast the secret to a string, causing lexicographic instead of numeric comparison (e.g. `"9" > "10"` is True as strings).
+3. **Hard difficulty easier than Normal** — `get_range_for_difficulty("Hard")` returned `(1, 50)`, narrower than Normal's `(1, 100)`.
+4. **`logic_utils.py` was empty stubs** — All functions raised `NotImplementedError`; logic lived only in `app.py`.
+5. **New Game ignored difficulty** — The "New Game" button hardcoded `random.randint(1, 100)` instead of using the selected difficulty range.
+6. **Attempts counter off-by-one** — `attempts` initialized to `1` instead of `0`, so the first submit was counted as attempt 2.
+
+**Fixes applied:**
+- Moved all logic functions into `logic_utils.py` with correct implementations.
+- `check_guess` now returns only the outcome string ("Win" / "Too High" / "Too Low"); messages are looked up in a dict in `app.py`.
+- Removed the even/odd secret-string-cast block entirely.
+- Fixed Hard difficulty range to `(1, 200)`.
+- Fixed "New Game" to use `get_range_for_difficulty` and reset all state.
+- Fixed attempts to start at `0`.
 
 ## 📸 Demo
 
